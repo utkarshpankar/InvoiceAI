@@ -23,9 +23,15 @@ function parseAllowedOrigins() {
   return [...origins];
 }
 
-function isVercelPreviewOrigin(origin) {
-  if (process.env.ALLOW_VERCEL_PREVIEWS !== "true") return false;
+function isVercelAppOrigin(origin) {
   return /^https:\/\/[\w.-]+\.vercel\.app$/.test(origin);
+}
+
+function isVercelOriginAllowed(origin) {
+  if (!isVercelAppOrigin(origin)) return false;
+  if (process.env.ALLOW_VERCEL_PREVIEWS === "false") return false;
+  // Allow Vercel frontends in production by default (common for Vercel + Render setups).
+  return process.env.NODE_ENV === "production" || process.env.ALLOW_VERCEL_PREVIEWS === "true";
 }
 
 export function createCorsOptions() {
@@ -33,7 +39,8 @@ export function createCorsOptions() {
 
   if (process.env.NODE_ENV === "production" && allowedOrigins.length === 0) {
     console.warn(
-      "Warning: No FRONTEND_URL or ALLOWED_ORIGINS set. CORS will block browser requests in production."
+      "FRONTEND_URL is not set. Allowing *.vercel.app origins as fallback. " +
+        "Set FRONTEND_URL=https://your-app.vercel.app for a stricter production setup."
     );
   }
 
@@ -42,7 +49,7 @@ export function createCorsOptions() {
       // Allow server-to-server tools and same-origin health checks without Origin header.
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin) || isVercelPreviewOrigin(origin)) {
+      if (allowedOrigins.includes(origin) || isVercelOriginAllowed(origin)) {
         return callback(null, true);
       }
 
