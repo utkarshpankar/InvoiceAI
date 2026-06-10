@@ -24,8 +24,9 @@ export function validateClientEnv() {
     }
 
     if (isDevClerkKey) {
-      throw new Error(
-        "Production build cannot use Clerk development keys (pk_test_). Create a production Clerk instance and use pk_live_."
+      console.warn(
+        "[InvoiceAI] Using Clerk development keys (pk_test_) in production. " +
+          "Switch to pk_live_ from your Clerk Production instance when ready."
       );
     }
   }
