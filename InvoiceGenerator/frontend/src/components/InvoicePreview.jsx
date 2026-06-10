@@ -2,9 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { invoicePreviewStyles } from "../assets/dummyStyles";
-
-/* ----------------- CONFIG ----------------- */
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+import { API_BASE } from "../config/env";
 const PROFILE_ENDPOINT = `${API_BASE}/api/businessProfile/me`;
 const INVOICE_ENDPOINT = (id) => `${API_BASE}/api/invoice/${id}`;
 
@@ -201,7 +199,7 @@ export default function InvoicePreview() {
   const obtainToken = useCallback(async () => {
     if (typeof getToken !== "function") return null;
     try {
-      let token = await getToken({ template: "default" }).catch(() => null);
+      let token = await getToken().catch(() => null);
       if (!token)
         token = await getToken({ forceRefresh: true }).catch(() => null);
       return token;

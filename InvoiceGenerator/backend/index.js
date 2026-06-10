@@ -2,6 +2,8 @@ import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
 import { connectDB } from './config/db.js';
+import { createCorsOptions } from './config/cors.js';
+import { validateClerkEnv } from './config/clerk.js';
 import path from 'path';
 
 // ⭐ ADD CLERK MIDDLEWARE
@@ -10,15 +12,13 @@ import businessProfileRouter from './routes/businessProfileRouter.js';
 import invoiceRouter from './routes/invoiceRouter.js';
 import aiInvoiceRouter from './routes/aiInvoiceRouter.js';
 
+validateClerkEnv();
+
 const app = express();
 const port = process.env.PORT || 4000;
 
 // ⭐ IMPORTANT: ENABLE CREDENTIALS FOR CLERK COOKIE SESSION
-const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:5173";
-app.use(cors({
-    origin: allowedOrigin,
-    credentials: true
-}));
+app.use(cors(createCorsOptions()));
 
 // ⭐ Use Clerk middleware globally (does NOT protect routes)
 app.use(clerkMiddleware());

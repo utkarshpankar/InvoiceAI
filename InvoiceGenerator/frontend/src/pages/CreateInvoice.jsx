@@ -7,9 +7,7 @@ import {
   createInvoiceIconColors,
   createInvoiceCustomStyles,
 } from "../assets/dummyStyles";
-
-/* ---------- API BASE ---------- */
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+import { API_BASE } from "../config/env";
 
 /* ---------- storage helpers (unchanged) ---------- */
 /* ----------------- frontend-only: normalize image URLs ----------------- */
@@ -197,7 +195,7 @@ export default function CreateInvoice() {
   const obtainToken = useCallback(async () => {
     if (typeof getToken !== "function") return null;
     try {
-      let token = await getToken({ template: "default" }).catch(() => null);
+      let token = await getToken().catch(() => null);
       if (!token) {
         token = await getToken({ forceRefresh: true }).catch(() => null);
       }

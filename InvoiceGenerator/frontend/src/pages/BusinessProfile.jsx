@@ -5,8 +5,7 @@ import {
   iconColors,
   customStyles,
 } from "../assets/dummyStyles";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+import { API_BASE } from "../config/env";
 
 /* ---------- small icon components ---------- */
 const UploadIcon = ({ className = "w-5 h-5" }) => (
@@ -121,7 +120,7 @@ export default function BusinessProfile() {
   async function getAuthToken() {
     if (typeof getToken !== "function") return null;
     try {
-      let t = await getToken({ template: "default" }).catch(() => null);
+      let t = await getToken().catch(() => null);
       if (!t) t = await getToken({ forceRefresh: true }).catch(() => null);
       return t;
     } catch {

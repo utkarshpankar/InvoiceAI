@@ -4,9 +4,7 @@ import StatusBadge from "../components/StatusBadge";
 import { useNavigate } from "react-router-dom";
 import { dashboardStyles } from "../assets/dummyStyles";
 import { useAuth } from "@clerk/clerk-react";
-
-/* API base (adjust via env in production if needed) */
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+import { API_BASE } from "../config/env";
 
 /* normalize client object (same logic as before) */
 function normalizeClient(raw) {
@@ -144,7 +142,7 @@ export default function Dashboard() {
   const obtainToken = useCallback(async () => {
     if (typeof getToken !== "function") return null;
     try {
-      let token = await getToken({ template: "default" }).catch(() => null);
+      let token = await getToken().catch(() => null);
       if (!token) {
         token = await getToken({ forceRefresh: true }).catch(() => null);
       }

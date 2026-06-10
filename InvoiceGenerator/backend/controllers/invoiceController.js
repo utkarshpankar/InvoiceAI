@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 import path from "path";
 import { getAuth } from "@clerk/express";
 import Invoice from "../models/invoiceModel.js";
+import { getBackendUrl } from "../config/server.js";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = getBackendUrl();
 
 /** Compute subtotal, tax, and total */
 function computeTotals(items = [], taxPercent = 0) {
